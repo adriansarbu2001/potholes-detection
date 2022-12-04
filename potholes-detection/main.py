@@ -1,39 +1,20 @@
-import os
-import random
+import base64
+import io
+import sys
 
-import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+from PIL.Image import Image
 
-from itertools import chain
-from skimage.io import imread, imshow, concatenate_images
 from skimage.transform import resize
-from sklearn.model_selection import train_test_split
 
-import tensorflow as tf
-
-from keras.models import Model, load_model
-from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout
-from keras.layers.core import Lambda, RepeatVector, Reshape
+from keras.models import Model
+from keras.layers import Input, BatchNormalization, Activation, Dropout
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
-from keras.layers.pooling import MaxPooling2D, GlobalMaxPool2D
-from keras.layers.merging import concatenate, add
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from keras.layers.pooling import MaxPooling2D
+from keras.layers.merging import concatenate
 from keras.optimizers import Adam
-from keras.preprocessing.image import ImageDataGenerator
-from keras.utils import array_to_img, img_to_array, load_img
-
-"""
-gpus = tf.config.experimental.list_physical_devices('GPU')
-if gpus:
-    try:
-        tf.config.experimental.set_memory_growth(gpus[0], True)
-        # tf.config.experimental.set_virtual_device_configuration(gpus[0], [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=2048)])
-    except RuntimeError as e:
-        print(e)
-"""
-
-plt.style.use("ggplot")
+from keras.utils import img_to_array
+from flask import Flask, request, jsonify
 
 # Set some parameters
 im_width = 400
@@ -115,30 +96,42 @@ model.compile(optimizer=Adam(), loss="binary_crossentropy", metrics=["accuracy"]
 # load the best model
 model.load_weights('model-tgs-salt.h5')
 
-
-
-
-from flask import Flask, jsonify, request, send_file
-
 app = Flask(__name__)
 
 
 @app.route('/potholes-detection', methods=['POST'])
 def get_contour():
     try:
-        imagefile = request.files['imagefile'].read()
-        x_img = img_to_array(imagefile)
+        file = request.files['image.jpg'].read()
+        npimg = np.fromstring(file, np.uint8)
+        x_img = img_to_array(npimg)
         x_img = resize(x_img, (400, 400, 3), mode='constant', preserve_range=True)
         x_img = x_img / 255.0
 
         res = model.predict(np.array([x_img]))
         res = np.where(res > 0.5, 1, res)
         res = np.where(res < 0.5, 0, res)
-        return jsonify({'status': str(res)})
+
+        res = Image.fromarray(res.astype("uint8"))
+        rawBytes = io.BytesIO()
+        res.save(rawBytes, "JPEG")
+        rawBytes.seek(0)
+        img_base64 = base64.b64encode(rawBytes.read())
+
+        return jsonify({'status': str(img_base64)})
 
     except Exception as err:
         return '', 500
 
 
+@app.after_request
+def after_request(response):
+    print("log: setting cors", file=sys.stderr)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    return response
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
