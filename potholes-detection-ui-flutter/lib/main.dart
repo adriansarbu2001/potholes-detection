@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+// import 'package:dio/dio.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +28,7 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
+  final String baseUri = "http://127.0.0.1:5000";
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -45,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         imageFile = File(pickedFile.path);
       });
+      postPhoto(imageFile!);
     }
   }
 
@@ -60,6 +64,15 @@ class _MyHomePageState extends State<MyHomePage> {
         imageFile = File(pickedFile.path);
       });
     }
+  }
+
+  Future<dynamic> postPhoto(File imageFile) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse("${widget.baseUri}/potholes-detection"));
+    request.files.add(http.MultipartFile(
+        'picture', imageFile.readAsBytes().asStream(), imageFile.lengthSync(),
+        filename: "image.jpg"));
+    var res = await request.send();
   }
 
   @override

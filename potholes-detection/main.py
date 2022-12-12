@@ -1,9 +1,12 @@
 import base64
 import io
+import math
 import sys
+import cv2
 
 import numpy as np
 from PIL.Image import Image
+from matplotlib import pyplot as plt
 
 from skimage.transform import resize
 
@@ -14,7 +17,7 @@ from keras.layers.pooling import MaxPooling2D
 from keras.layers.merging import concatenate
 from keras.optimizers import Adam
 from keras.utils import img_to_array
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response, make_response
 
 # Set some parameters
 im_width = 400
@@ -102,25 +105,30 @@ app = Flask(__name__)
 @app.route('/potholes-detection', methods=['POST'])
 def get_contour():
     try:
-        file = request.files['image.jpg'].read()
-        npimg = np.fromstring(file, np.uint8)
-        x_img = img_to_array(npimg)
+        r = request
+        # convert string of image data to uint8
+        nparr = np.frombuffer(r.data, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        # plt.imshow(img)
+        # plt.show()
+
+        x_img = img
         x_img = resize(x_img, (400, 400, 3), mode='constant', preserve_range=True)
         x_img = x_img / 255.0
 
-        res = model.predict(np.array([x_img]))
+        res = model.predict(np.array([x_img]))[0]
         res = np.where(res > 0.5, 1, res)
         res = np.where(res < 0.5, 0, res)
+        norm_res = cv2.normalize(res, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+        norm_res = cv2.cvtColor(norm_res, cv2.COLOR_GRAY2BGR)
 
-        res = Image.fromarray(res.astype("uint8"))
-        rawBytes = io.BytesIO()
-        res.save(rawBytes, "JPEG")
-        rawBytes.seek(0)
-        img_base64 = base64.b64encode(rawBytes.read())
-
-        return jsonify({'status': str(img_base64)})
+        retval, buffer = cv2.imencode('.png', norm_res)
+        response = make_response(buffer.tobytes())
+        response.headers['Content-Type'] = 'image/png'
+        return response
 
     except Exception as err:
+        print(err)
         return '', 500
 
 
@@ -134,4 +142,4 @@ def after_request(response):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
