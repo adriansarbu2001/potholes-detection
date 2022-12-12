@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-// import 'package:dio/dio.dart';
+import 'package:potholes_detection/provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(title: 'Potholes detection'),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+              create: (context) => PotholesDetectionProvider()),
+        ],
+        child: const MyHomePage(title: 'Potholes detection'),
+      ),
     );
   }
 }
@@ -28,13 +34,13 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
-  final String baseUri = "http://127.0.0.1:5000";
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late PotholesDetectionProvider _provider;
   File? imageFile;
 
   /// Get from gallery
@@ -45,10 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
       maxHeight: 1800,
     );
     if (pickedFile != null) {
-      setState(() {
-        imageFile = File(pickedFile.path);
-      });
-      postPhoto(imageFile!);
+      imageFile = File(pickedFile.path);
+      _provider.postPhoto(imageFile!);
     }
   }
 
@@ -60,23 +64,15 @@ class _MyHomePageState extends State<MyHomePage> {
       maxHeight: 1800,
     );
     if (pickedFile != null) {
-      setState(() {
-        imageFile = File(pickedFile.path);
-      });
+      imageFile = File(pickedFile.path);
+      _provider.postPhoto(imageFile!);
     }
-  }
-
-  Future<dynamic> postPhoto(File imageFile) async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse("${widget.baseUri}/potholes-detection"));
-    request.files.add(http.MultipartFile(
-        'picture', imageFile.readAsBytes().asStream(), imageFile.lengthSync(),
-        filename: "image.jpg"));
-    var res = await request.send();
   }
 
   @override
   Widget build(BuildContext context) {
+    _provider = Provider.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -106,36 +102,56 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               )
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 12),
-                    Center(
-                      child: Stack(
-                        children: [
-                          Image.file(
-                            imageFile!,
-                            fit: BoxFit.cover,
-                          ),
-                          const Image(
-                            image: AssetImage("assets/images/potholes.png"),
-                          ),
-                        ],
+            : _provider.loading
+                ? const CircularProgressIndicator()
+                : _provider.error != null
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(_provider.error.toString()),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  imageFile = null;
+                                });
+                              },
+                              child: const Text("Choose another"),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 12),
+                            Center(
+                              child: Stack(
+                                children: [
+                                  // Image.file(
+                                  //   imageFile!,
+                                  //   fit: BoxFit.cover,
+                                  // ),
+                                  Image(
+                                    image: _provider.image!.image,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  imageFile = null;
+                                });
+                              },
+                              child: const Text("Choose another"),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          imageFile = null;
-                        });
-                      },
-                      child: const Text("Choose another"),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-                ),
-              ),
       ),
     );
   }
