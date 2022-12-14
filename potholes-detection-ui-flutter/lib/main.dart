@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               )
             : _provider.loading
-                ? const CircularProgressIndicator()
+                ? const Center(child: CircularProgressIndicator())
                 : _provider.error != null
                     ? Center(
                         child: Column(
@@ -125,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     : SingleChildScrollView(
                         child: Column(
                           children: [
-                            const SizedBox(height: 12),
                             Center(
                               child: Stack(
                                 children: [
@@ -133,6 +132,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                   //   imageFile!,
                                   //   fit: BoxFit.cover,
                                   // ),
+                                  Container(
+                                    width: 400.0,
+                                    height: 400.0,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: Image.file(imageFile!).image,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
                                   Image(
                                     image: _provider.image!.image,
                                   ),
