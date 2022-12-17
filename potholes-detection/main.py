@@ -13,11 +13,11 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
 from keras.models import Model, load_model
-from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout
+from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout, GlobalAveragePooling2D, Permute
 from keras.layers.core import Lambda, RepeatVector, Reshape
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D, GlobalMaxPool2D
-from keras.layers.merging import concatenate, add
+from keras.layers.merging import concatenate, multiply, dot, add
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
@@ -116,6 +116,66 @@ def conv2d_block(input_tensor, n_filters, kernel_size=3, batchnorm=True):
     return x
 
 
+def channel_matrix_operation(input):  # H x W x C
+    x1 = Reshape((input.shape[1] * input.shape[2], input.shape[3]))(input)   # (H * W) x C
+    x2 = Permute((2, 1))(x1)  # C x (H * W)
+    x3 = dot([x2, x1], axes=(2, 1))  # C x C
+    x4 = Activation('softmax')(x3)
+    return x4
+
+
+def spatial_matrix_operation(input, batchnorm=True):  # H x W x C
+    x1 = Conv2D(filters=input.shape[3], kernel_size=(3, 3), activation='relu', padding='same')(input)  # H x W x C
+    if batchnorm:
+        x1 = BatchNormalization()(x1)
+    x2 = Conv2D(filters=input.shape[3], kernel_size=(3, 3), activation='relu', padding='same')(input)  # H x W x C
+    if batchnorm:
+        x2 = BatchNormalization()(x2)
+    x1 = Reshape((input.shape[1] * input.shape[2], input.shape[3]))(x1)  # (H * W) x C
+    x2 = Reshape((input.shape[1] * input.shape[2], input.shape[3]))(x2)  # (H * W) x C
+    x2 = Permute((2, 1))(x2)  # C x (H * W)
+    x3 = dot([x1, x2], axes=(2, 1))  # (H * W) x (H * W)
+    x4 = Activation('softmax')(x3)
+    return x4
+
+
+def position_attention_module(input):  # H x W x C
+    x1 = Conv2D(filters=1, kernel_size=(1, 1), padding='same')(input)  # H x W x 1
+    x2 = Activation('sigmoid')(x1)
+    x3 = multiply([input, x2])  # H x W x C
+    return x3
+
+
+def channel_attention_module(input):  # H x W x C
+    x1 = GlobalAveragePooling2D()(input)  # 1 x 1 x C
+    x2 = Dense(input.shape[3] / 16, activation='relu')(x1)  # 1 x 1 x (C / 16)
+    x3 = Dense(input.shape[3])(x2)  # 1 x 1 x C
+    x4 = Activation('sigmoid')(x3)
+    x5 = multiply([input, x4])  # H x W x C
+    return x5
+
+
+def dual_attention_module(input, batchnorm=True):  # H x W x C
+    x1 = Conv2D(filters=input.shape[3], kernel_size=(3, 3), activation='relu', padding='same')(input)  # H x W x C
+    x2 = channel_matrix_operation(x1)  # C x C
+    x3 = Permute((2, 1))(x2)  # C x C
+    x4 = Reshape((input.shape[1] * input.shape[2], input.shape[3]))(x1)  # (H * W) x C
+    x5 = dot([x4, x3], axes=(2, 1))  # (H * W) x C
+    x6 = Reshape((input.shape[1], input.shape[2], input.shape[3]))(x5)  # H x W x C
+    x7 = add([x1, x6])  # H x W x C
+
+    y1 = Conv2D(filters=input.shape[3], kernel_size=(3, 3), activation='relu', padding='same')(input)  # H x W x C
+    y2 = spatial_matrix_operation(y1, batchnorm)  # (H * W) x (H * W)
+    y3 = Permute((2, 1))(y2)  # (H * W) x (H * W)
+    y4 = Reshape((input.shape[1] * input.shape[2], input.shape[3]))(y1)  # (H * W) x C
+    y5 = dot([y3, y4], axes=(2, 1))  # (H * W) x C
+    y6 = Reshape((input.shape[1], input.shape[2], input.shape[3]))(y5)  # H x W x C
+    y7 = add([y1, y6])  # H x W x C
+
+    rez = add([x7, y7])  # H x W x C
+    return rez
+
+
 def get_unet(input_img, n_filters=16, dropout=0.1, batchnorm=True):
     """Function to define the UNET Model"""
     # Contracting Path
@@ -137,24 +197,30 @@ def get_unet(input_img, n_filters=16, dropout=0.1, batchnorm=True):
 
     c5 = conv2d_block(p4, n_filters=n_filters * 16, kernel_size=3, batchnorm=batchnorm)
 
+    am5 = dual_attention_module(c5, batchnorm)
+
     # Expansive Path
-    u6 = Conv2DTranspose(n_filters * 8, (3, 3), strides=(2, 2), padding='same')(c5)
-    u6 = concatenate([u6, c4])
+    u6 = Conv2DTranspose(n_filters * 8, (3, 3), strides=(2, 2), padding='same')(am5)
+    am4 = channel_attention_module(c4)
+    u6 = concatenate([u6, am4])
     u6 = Dropout(dropout)(u6)
     c6 = conv2d_block(u6, n_filters * 8, kernel_size=3, batchnorm=batchnorm)
 
     u7 = Conv2DTranspose(n_filters * 4, (3, 3), strides=(2, 2), padding='same')(c6)
-    u7 = concatenate([u7, c3])
+    am3 = channel_attention_module(c3)
+    u7 = concatenate([u7, am3])
     u7 = Dropout(dropout)(u7)
     c7 = conv2d_block(u7, n_filters * 4, kernel_size=3, batchnorm=batchnorm)
 
     u8 = Conv2DTranspose(n_filters * 2, (3, 3), strides=(2, 2), padding='same')(c7)
-    u8 = concatenate([u8, c2])
+    am2 = channel_attention_module(c2)
+    u8 = concatenate([u8, am2])
     u8 = Dropout(dropout)(u8)
     c8 = conv2d_block(u8, n_filters * 2, kernel_size=3, batchnorm=batchnorm)
 
     u9 = Conv2DTranspose(n_filters * 1, (3, 3), strides=(2, 2), padding='same')(c8)
-    u9 = concatenate([u9, c1])
+    am1 = position_attention_module(c1)
+    u9 = concatenate([u9, am1])
     u9 = Dropout(dropout)(u9)
     c9 = conv2d_block(u9, n_filters * 1, kernel_size=3, batchnorm=batchnorm)
 
@@ -171,7 +237,7 @@ model.summary()
 callbacks = [
     EarlyStopping(patience=10, verbose=1),
     ReduceLROnPlateau(factor=0.1, patience=5, min_lr=0.00001, verbose=1),
-    ModelCheckpoint('model-tgs-salt.h5', verbose=1, save_best_only=True, save_weights_only=True)
+    ModelCheckpoint('model.h5', verbose=1, save_best_only=True)
 ]
 
 results = model.fit(X_train, y_train, batch_size=8, epochs=50, callbacks=callbacks, validation_data=(X_valid, y_valid))
