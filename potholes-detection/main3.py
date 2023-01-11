@@ -35,8 +35,8 @@ res = np.where(res < 0.5, 0, res)
 
 has_mask = x_img.max() > 0
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
-# fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 15))
+# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 15))
 
 ax1.imshow(x_img)
 if has_mask:
@@ -46,6 +46,6 @@ ax1.set_title('Test image')
 
 ax2.imshow(res[0].squeeze(), cmap='gray', interpolation='bilinear')
 ax2.set_title('Predicted')
-# ax3.imshow(label.squeeze(), cmap='gray', interpolation='bilinear')
-# ax3.set_title('Real label')
+ax3.imshow(label.squeeze(), cmap='gray', interpolation='bilinear')
+ax3.set_title('Real label')
 plt.show()

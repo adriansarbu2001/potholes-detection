@@ -1,18 +1,11 @@
 import os
 import random
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from itertools import chain
-from skimage.io import imread, imshow, concatenate_images
 from skimage.transform import resize
-from skimage.morphology import label
-from sklearn.model_selection import train_test_split
 
-import tensorflow as tf
-
-from keras.models import Model, load_model
+from keras.models import Model
 from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout, GlobalAveragePooling2D, Permute
 from keras.layers.core import Lambda, RepeatVector, Reshape
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
