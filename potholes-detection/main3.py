@@ -1,26 +1,15 @@
-import os
-import random
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from itertools import chain
-from skimage.io import imread, imshow, concatenate_images
 from skimage.transform import resize
-from sklearn.model_selection import train_test_split
 
-import tensorflow as tf
-
-from keras.models import Model, load_model
-from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout
-from keras.layers.core import Lambda, RepeatVector, Reshape
+from keras.models import Model
+from keras.layers import Input, BatchNormalization, Activation, Dropout
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
-from keras.layers.pooling import MaxPooling2D, GlobalMaxPool2D
-from keras.layers.merging import concatenate, add
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from keras.layers.pooling import MaxPooling2D
+from keras.layers.merging import concatenate
 from keras.optimizers import Adam
-from keras.preprocessing.image import ImageDataGenerator
-from keras.utils import array_to_img, img_to_array, load_img
+from keras.utils import img_to_array, load_img
 
 """
 gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -114,7 +103,7 @@ model.compile(optimizer=Adam(), loss="binary_crossentropy", metrics=["accuracy"]
 # load the best model
 model.load_weights('model-tgs-salt.h5')
 
-img = load_img("test5.png", color_mode='rgb')
+img = load_img("test.png", color_mode='rgb')
 label = load_img("test_real_label.png", color_mode='grayscale')
 x_img = img_to_array(img)
 x_img = resize(x_img, (400, 400, 3), mode='constant', preserve_range=True)
@@ -129,8 +118,8 @@ res = np.where(res < 0.5, 0, res)
 
 has_mask = x_img.max() > 0
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
-# fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 15))
+# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 15))
 
 ax1.imshow(x_img)
 if has_mask:
@@ -140,6 +129,6 @@ ax1.set_title('Test image')
 
 ax2.imshow(res[0].squeeze(), cmap='gray', interpolation='bilinear')
 ax2.set_title('Predicted')
-# ax3.imshow(label.squeeze(), cmap='gray', interpolation='bilinear')
-# ax3.set_title('Real label')
+ax3.imshow(label.squeeze(), cmap='gray', interpolation='bilinear')
+ax3.set_title('Real label')
 plt.show()
