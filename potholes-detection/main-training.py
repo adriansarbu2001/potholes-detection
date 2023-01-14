@@ -7,14 +7,13 @@ from skimage.transform import resize
 
 from keras.models import Model
 from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout, GlobalAveragePooling2D, Permute
-from keras.layers.core import Lambda, RepeatVector, Reshape
+from keras.layers.core import Reshape
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
-from keras.layers.pooling import MaxPooling2D, GlobalMaxPool2D
+from keras.layers.pooling import MaxPooling2D
 from keras.layers.merging import concatenate, multiply, dot, add
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.optimizers import Adam
-from keras.preprocessing.image import ImageDataGenerator
-from keras.utils import array_to_img, img_to_array, load_img
+from keras.utils import img_to_array, load_img
 
 """
 gpus = tf.config.experimental.list_physical_devices('GPU')
