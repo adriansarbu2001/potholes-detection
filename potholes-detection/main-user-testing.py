@@ -101,7 +101,7 @@ model.compile(optimizer=Adam(), loss="binary_crossentropy", metrics=["accuracy"]
 # model.summary()
 
 # load the best model
-model.load_weights('model-tgs-salt.h5')
+model.load_weights('model.h5')
 
 img = load_img("test.png", color_mode='rgb')
 label = load_img("test_real_label.png", color_mode='grayscale')

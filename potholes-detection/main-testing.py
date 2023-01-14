@@ -148,7 +148,7 @@ model.compile(optimizer=Adam(), loss="binary_crossentropy", metrics=["accuracy"]
 model.summary()
 
 # load the best model
-model.load_weights('model-tgs-salt.h5')
+model.load_weights('model.h5')
 
 # Evaluate on validation set (this must be equals to the best log_loss)
 model.evaluate(X_valid, y_valid, verbose=1)
