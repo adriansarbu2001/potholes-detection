@@ -1,11 +1,13 @@
 import os
 import random
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 from itertools import chain
 from skimage.io import imread, imshow, concatenate_images
 from skimage.transform import resize
+from skimage.morphology import label
 from sklearn.model_selection import train_test_split
 
 import tensorflow as tf
@@ -38,13 +40,12 @@ im_width = 400
 im_height = 400
 border = 5
 
-ids = next(os.walk("data/testing/rgb"))[2]  # list of names all images in the given path
+ids = next(os.walk("data/training/rgb"))[2]  # list of names all images in the given path
 print("No. of images = ", len(ids))
 
-X = np.zeros((len(ids), im_height, im_width, 3), dtype=np.float32)
-y = np.zeros((len(ids), im_height, im_width, 1), dtype=np.float32)
+X_train = np.zeros((len(ids), im_height, im_width, 3), dtype=np.float32)
+y_train = np.zeros((len(ids), im_height, im_width, 1), dtype=np.float32)
 
-# tqdm is used to display the progress bar
 for n, id_ in zip(range(len(ids)), ids):
     # Load images
     img = load_img("data/training/rgb/" + id_, color_mode='rgb')
@@ -54,17 +55,34 @@ for n, id_ in zip(range(len(ids)), ids):
     mask = img_to_array(load_img("data/training/label/" + id_, color_mode='grayscale'))
     mask = resize(mask, (400, 400, 1), mode='constant', preserve_range=True)
     # Save images
-    X[n] = x_img / 255.0
-    y[n] = mask / 255.0
+    X_train[n] = x_img / 255.0
+    y_train[n] = mask / 255.0
 
-# Split train and valid
-X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.1, random_state=42)
+ids = next(os.walk("data/validation/rgb"))[2]  # list of names all images in the given path
+print("No. of images = ", len(ids))
+
+X_valid = np.zeros((len(ids), im_height, im_width, 3), dtype=np.float32)
+y_valid = np.zeros((len(ids), im_height, im_width, 1), dtype=np.float32)
+
+for n, id_ in zip(range(len(ids)), ids):
+    # Load images
+    img = load_img("data/validation/rgb/" + id_, color_mode='rgb')
+    x_img = img_to_array(img)
+    x_img = resize(x_img, (400, 400, 3), mode='constant', preserve_range=True)
+    # Load masks
+    mask = img_to_array(load_img("data/validation/label/" + id_, color_mode='grayscale'))
+    mask = resize(mask, (400, 400, 1), mode='constant', preserve_range=True)
+    # Save images
+    X_valid[n] = x_img / 255.0
+    y_valid[n] = mask / 255.0
 
 # Visualize any random image along with the mask
 ix = random.randint(0, len(X_train))
 has_mask = y_train[ix].max() > 0
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
+
+print(np.array(X_train[ix]).shape)
 
 ax1.imshow(X_train[ix])
 if has_mask:
@@ -148,8 +166,21 @@ model.compile(optimizer=Adam(), loss="binary_crossentropy", metrics=["accuracy"]
 
 model.summary()
 
-# load the best model
-model.load_weights('model-tgs-salt.h5')
+callbacks = [
+    EarlyStopping(patience=10, verbose=1),
+    ReduceLROnPlateau(factor=0.1, patience=5, min_lr=0.00001, verbose=1),
+    ModelCheckpoint('model-tgs-salt.h5', verbose=1, save_best_only=True, save_weights_only=True)
+]
 
-# Evaluate on validation set (this must be equals to the best log_loss)
-model.evaluate(X_valid, y_valid, verbose=1)
+results = model.fit(X_train, y_train, batch_size=8, epochs=50, callbacks=callbacks, validation_data=(X_valid, y_valid))
+
+plt.figure(figsize=(8, 8))
+plt.title("Learning curve")
+plt.plot(results.history["loss"], label="loss")
+plt.plot(results.history["val_loss"], label="val_loss")
+plt.plot(np.argmin(results.history["val_loss"]), np.min(results.history["val_loss"]), marker="x", color="r",
+         label="best model")
+plt.xlabel("Epochs")
+plt.ylabel("log_loss")
+plt.legend()
+plt.show()
