@@ -1,15 +1,9 @@
-import base64
-import io
-import math
 import sys
 import cv2
 
 import numpy as np
-from PIL.Image import Image
-from matplotlib import pyplot as plt
 
 from skimage.transform import resize
-from skimage import data, filters
 
 from keras.models import Model
 from keras.layers import Input, BatchNormalization, Activation, Dropout
@@ -17,8 +11,7 @@ from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D
 from keras.layers.merging import concatenate
 from keras.optimizers import Adam
-from keras.utils import img_to_array
-from flask import Flask, request, jsonify, Response, make_response
+from flask import Flask, request, make_response
 
 # Set some parameters
 im_width = 400
@@ -98,7 +91,7 @@ model.compile(optimizer=Adam(), loss="binary_crossentropy", metrics=["accuracy"]
 # model.summary()
 
 # load the best model
-model.load_weights('model-tgs-salt.h5')
+model.load_weights('model.h5')
 
 app = Flask(__name__)
 
