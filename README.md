@@ -1,8 +1,8 @@
 # potholes-detection
 
 ### - report folder contains the documentation of the project.
-### - potholes-detection-ui-fluter contains a simple flutter UI.
-### - potholes-detection contains:
+### - potholes-detection-ui-fluter folder contains a simple flutter UI.
+### - potholes-detection folder contains:
 - branch **main** - An simple API
 - branch **API** - An simple API
 - branch **classification01** - Binary Classification Neural Network
