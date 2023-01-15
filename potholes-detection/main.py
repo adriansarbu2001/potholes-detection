@@ -91,4 +91,5 @@ def after_request(response):
 
 if __name__ == "__main__":
     # app.run()
-    app.run(host='192.168.1.24', port=5000, debug=False)
+    # app.run(host='192.168.1.24', port=5000, debug=False)
+    app.run(port=5000, debug=False)
