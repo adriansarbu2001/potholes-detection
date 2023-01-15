@@ -99,6 +99,7 @@ app = Flask(__name__)
 @app.route('/potholes-detection', methods=['POST'])
 def get_contour():
     try:
+        print("REQUEST RECEIVED")
         r = request
         # convert string of image data to uint8
         nparr = np.frombuffer(r.data, np.uint8)
@@ -164,4 +165,5 @@ def after_request(response):
 
 
 if __name__ == "__main__":
-    app.run()
+    # app.run()
+    app.run(host='192.168.1.24', port=5000, debug=False)
