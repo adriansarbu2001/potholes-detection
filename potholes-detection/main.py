@@ -37,8 +37,8 @@ def get_contour():
         x_img = x_img / 255.0
 
         res = model.predict(np.array([x_img]))[0]
-        res = np.where(res > 0.75, 1, res)
-        res = np.where(res < 0.75, 0, res)
+        res = np.where(res > 0.6, 1, res)
+        res = np.where(res < 0.6, 0, res)
         # edges = filters.sobel(res)
 
         norm_res = cv2.normalize(res, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
@@ -50,25 +50,6 @@ def get_contour():
         # assign the red channel of src to empty image
         red_img[:, :, 2] = red_channel
         red_img[:, :, 3] = red_channel // 3
-
-        # edges = cv2.normalize(edges, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-        # edges = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
-
-        # has_mask = x_img.max() > 0
-        #
-        # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
-        # # fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 15))
-        #
-        # ax1.imshow(x_img)
-        # if has_mask:
-        #     # draw a boundary(contour) in the original image separating pothole and background areas
-        #     ax1.contour(res[0].squeeze(), colors='k', linewidths=5, levels=[0.5])
-        # ax1.set_title('Test image')
-        #
-        # ax2.imshow(res[0].squeeze(), cmap='gray', interpolation='bilinear')
-        # ax2.set_title('Predicted')
-        # # ax3.imshow(label.squeeze(), cmap='gray', interpolation='bilinear')
-        # # ax3.set_title('Real label')
 
         retval, buffer = cv2.imencode('.png', red_img)
         response = make_response(buffer.tobytes())
