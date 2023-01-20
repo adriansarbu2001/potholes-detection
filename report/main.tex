@@ -205,6 +205,7 @@ Many networks have also been proposed to solve the potholes detection problem. O
 
 \begin{itemize}
 	\item They proposed an UNet architecture with attention modules.
+	\item The dataset that they used is available here: \url{https://sites.google.com/view/pothole-600/dataset}
 	\item My work is trying to replicate their work and improve it in the future.
 \end{itemize}
 
@@ -276,7 +277,15 @@ I then began working on an UNet Neural Network to predict a mask over the pothol
     \label{aAUNetArchitecture}
 \end{figure}
 
-Ultimately, I began working on an AA-UNet Neural Network to predict a mask over the potholes area in the image. In addition to the previous UNet architecture (\ref{uNetArchitecture}), the proposed architecture (\ref{aAUNetArchitecture}) has five attention modules ().
+Ultimately, I began working on an AA-UNet Neural Network to predict a mask over the potholes area in the image. In addition to the previous UNet architecture (\ref{uNetArchitecture}), the proposed architecture (\ref{aAUNetArchitecture}) has three  types of attention modules (\ref{aAUNetAttentionModules}) used on each of the five levels before concatenation.
+
+\begin{figure}[htbp]
+    \centerline{\includegraphics{assets/aAUNetAttentionModules.png}}  
+    \caption{The three attention modules that I used}
+    \label{aAUNetAttentionModules}
+\end{figure}
+
+\newpage
 \begin{itemize}
 	\item \textbf{Input:} A 400x400 image (\ref{uNetExamples})
 	\item \textbf{Output:} Black and white image representing the mask (\ref{uNetExamples})
