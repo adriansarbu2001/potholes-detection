@@ -65,7 +65,7 @@ def get_contour():
 def after_request(response):
     print("log: setting cors", file=sys.stderr)
     response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Connection,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     return response
 
