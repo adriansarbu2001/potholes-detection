@@ -1,16 +1,11 @@
 import os
-import random
 import numpy as np
 import matplotlib.pyplot as plt
 
 from skimage.transform import resize
 
-import tensorflow as tf
-
 from keras.models import Model
 import keras.metrics as metrics
-import keras.losses as losses
-import keras.backend as K
 from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout, GlobalAveragePooling2D, Permute, Lambda
 from keras.layers.core import Reshape
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
@@ -21,16 +16,6 @@ from keras.optimizers import Adam
 from keras.utils import img_to_array, load_img
 
 from custom_losses import weighted_binary_crossentropy
-
-"""
-gpus = tf.config.experimental.list_physical_devices('GPU')
-if gpus:
-    try:
-        tf.config.experimental.set_memory_growth(gpus[0], True)
-        # tf.config.experimental.set_virtual_device_configuration(gpus[0], [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=2048)])
-    except RuntimeError as e:
-        print(e)
-"""
 
 plt.style.use("ggplot")
 
@@ -64,7 +49,6 @@ print("No. of images = ", len(ids))
 X_valid = np.zeros((len(ids), im_height, im_width, 3), dtype=np.float32)
 y_valid = np.zeros((len(ids), im_height, im_width, 1), dtype=np.float32)
 
-# tqdm is used to display the progress bar
 for n, id_ in zip(range(len(ids)), ids):
     # Load images
     img = load_img("data/validation/rgb/" + id_, color_mode='rgb')
@@ -230,9 +214,9 @@ def get_unet(input_img, n_filters=16, dropout=0.1, batchnorm=True):
 input_img = Input((im_height, im_width, 3), name='img')
 model = get_unet(input_img, n_filters=16, dropout=0.05, batchnorm=True)
 
-model.compile(optimizer=Adam(learning_rate=1e-4), loss=weighted_binary_crossentropy(0.75, 0.25), metrics=["accuracy", metrics.MeanIoU(num_classes=2)])
+model.compile(optimizer=Adam(learning_rate=1e-4), loss=weighted_binary_crossentropy(0.92, 0.08), metrics=["accuracy", metrics.MeanIoU(num_classes=2)])
 
-model.summary()
+# model.summary()
 
 callbacks = [
     EarlyStopping(patience=10, verbose=1),
