@@ -5,8 +5,13 @@ import matplotlib.pyplot as plt
 
 from skimage.transform import resize
 
+import tensorflow as tf
+
 from keras.models import Model
-from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout, GlobalAveragePooling2D, Permute
+import keras.metrics as metrics
+import keras.losses as losses
+import keras.backend as K
+from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout, GlobalAveragePooling2D, Permute, Lambda
 from keras.layers.core import Reshape
 from keras.layers.convolutional import Conv2D, Conv2DTranspose
 from keras.layers.pooling import MaxPooling2D
@@ -14,6 +19,8 @@ from keras.layers.merging import concatenate, multiply, dot, add
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.optimizers import Adam
 from keras.utils import img_to_array, load_img
+
+from custom_losses import weighted_binary_crossentropy
 
 """
 gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -70,23 +77,23 @@ for n, id_ in zip(range(len(ids)), ids):
     X_valid[n] = x_img / 255.0
     y_valid[n] = mask / 255.0
 
-# Visualize any random image along with the mask
-ix = random.randint(0, len(X_train))
-has_mask = y_train[ix].max() > 0
-
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
-
-print(np.array(X_train[ix]).shape)
-
-ax1.imshow(X_train[ix])
-if has_mask:
-    # draw a boundary(contour) in the original image separating pothole and background areas
-    ax1.contour(y_train[ix].squeeze(), colors='k', linewidths=5, levels=[0.5])
-ax1.set_title('RGB')
-
-ax2.imshow(y_train[ix].squeeze(), cmap='gray', interpolation='bilinear')
-ax2.set_title('Segmentation')
-plt.show()
+# # Visualize any random image along with the mask
+# ix = random.randint(0, len(X_train))
+# has_mask = y_train[ix].max() > 0
+#
+# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
+#
+# print(np.array(X_train[ix]).shape)
+#
+# ax1.imshow(X_train[ix])
+# if has_mask:
+#     # draw a boundary(contour) in the original image separating pothole and background areas
+#     ax1.contour(y_train[ix].squeeze(), colors='k', linewidths=5, levels=[0.5])
+# ax1.set_title('RGB')
+#
+# ax2.imshow(y_train[ix].squeeze(), cmap='gray', interpolation='bilinear')
+# ax2.set_title('Segmentation')
+# plt.show()
 
 
 def conv2d_block(input_tensor, n_filters, kernel_size=3, batchnorm=True):
@@ -222,17 +229,18 @@ def get_unet(input_img, n_filters=16, dropout=0.1, batchnorm=True):
 
 input_img = Input((im_height, im_width, 3), name='img')
 model = get_unet(input_img, n_filters=16, dropout=0.05, batchnorm=True)
-model.compile(optimizer=Adam(), loss="binary_crossentropy", metrics=["accuracy"])
+
+model.compile(optimizer=Adam(learning_rate=1e-4), loss=weighted_binary_crossentropy(0.75, 0.25), metrics=["accuracy", metrics.MeanIoU(num_classes=2)])
 
 model.summary()
 
 callbacks = [
     EarlyStopping(patience=10, verbose=1),
-    ReduceLROnPlateau(factor=0.1, patience=5, min_lr=0.00001, verbose=1),
-    ModelCheckpoint('model.h5', verbose=1, save_best_only=True)
+    ReduceLROnPlateau(factor=0.1, patience=5, min_lr=1e-8, verbose=1),
+    ModelCheckpoint('model.h5', verbose=1, save_best_only=True),
 ]
 
-results = model.fit(X_train, y_train, batch_size=8, epochs=50, callbacks=callbacks, validation_data=(X_valid, y_valid))
+results = model.fit(X_train, y_train, batch_size=8, epochs=100, callbacks=callbacks, validation_data=(X_valid, y_valid))
 
 plt.figure(figsize=(8, 8))
 plt.title("Learning curve")
@@ -241,6 +249,6 @@ plt.plot(results.history["val_loss"], label="val_loss")
 plt.plot(np.argmin(results.history["val_loss"]), np.min(results.history["val_loss"]), marker="x", color="r",
          label="best model")
 plt.xlabel("Epochs")
-plt.ylabel("log_loss")
+plt.ylabel("loss")
 plt.legend()
 plt.show()

@@ -6,6 +6,8 @@ from skimage.transform import resize
 from keras.models import load_model
 from keras.utils import img_to_array, load_img
 
+from custom_losses import weighted_binary_crossentropy
+
 plt.style.use("ggplot")
 
 # Set some parameters
@@ -13,12 +15,9 @@ im_width = 400
 im_height = 400
 border = 5
 
-model = load_model('model.h5')
+model = load_model('model.h5', custom_objects={"loss": weighted_binary_crossentropy(0.75, 0.25)})
 
 # model.summary()
-
-# load the best model
-model.load_weights('model.h5')
 
 img = load_img("test.png", color_mode='rgb')
 label = load_img("test_real_label.png", color_mode='grayscale')

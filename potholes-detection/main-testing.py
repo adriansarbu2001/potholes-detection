@@ -7,6 +7,8 @@ from skimage.transform import resize
 from keras.utils import img_to_array, load_img
 from keras.models import load_model
 
+from custom_losses import weighted_binary_crossentropy
+
 plt.style.use("ggplot")
 
 # Set some parameters
@@ -35,7 +37,7 @@ for n, id_ in zip(range(len(ids)), ids):
 
 
 # load the best model
-model = load_model('model.h5')
+model = load_model('model.h5', custom_objects={"loss": weighted_binary_crossentropy(0.75, 0.25)})
 
 model.summary()
 
