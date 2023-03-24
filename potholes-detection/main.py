@@ -7,6 +7,7 @@ from skimage.transform import resize
 
 from keras.models import load_model
 from flask import Flask, request, make_response
+from custom_losses import weighted_binary_crossentropy
 
 # Set some parameters
 im_width = 400
@@ -14,7 +15,7 @@ im_height = 400
 border = 5
 
 # load the best model
-model = load_model('model-unet-2.h5')
+model = load_model('model-unet-2.h5', custom_objects={"loss": weighted_binary_crossentropy(0.92, 0.08)})
 
 # model.summary()
 
@@ -37,8 +38,8 @@ def get_contour():
         x_img = x_img / 255.0
 
         res = model.predict(np.array([x_img]))[0]
-        res = np.where(res > 0.6, 1, res)
-        res = np.where(res < 0.6, 0, res)
+        res = np.where(res > 0.33, 1, res)
+        res = np.where(res < 0.33, 0, res)
         # edges = filters.sobel(res)
 
         norm_res = cv2.normalize(res, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
