@@ -14,7 +14,7 @@ im_height = 400
 border = 5
 
 # load the best model
-model = load_model('model-unet.h5')
+model = load_model('model-unet-2.h5')
 
 # model.summary()
 
