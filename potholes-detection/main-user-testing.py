@@ -15,7 +15,7 @@ im_width = 400
 im_height = 400
 border = 5
 
-model = load_model('model.h5', custom_objects={"loss": weighted_binary_crossentropy(0.75, 0.25)})
+model = load_model('model.h5', custom_objects={"loss": weighted_binary_crossentropy(0.92, 0.08)})
 
 # model.summary()
 
