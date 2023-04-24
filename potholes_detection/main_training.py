@@ -63,9 +63,9 @@ def train_step(x, y):
         loss_value = loss_fn(y, y_pred)
         # Add any extra losses created during the forward pass.
         loss_value += sum(model.losses)
+
     grads = tape.gradient(loss_value, model.trainable_weights)
     optimizer.apply_gradients(zip(grads, model.trainable_weights))
-
     train_acc_metric.update_state(y, y_pred)
     return loss_value
 
