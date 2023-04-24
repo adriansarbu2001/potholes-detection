@@ -11,12 +11,13 @@ from utils.constants import IM_HEIGHT, IM_WIDTH
 
 # Set some parameters
 
-model = load_model('model.h5', custom_objects={"loss": weighted_binary_crossentropy(0.92, 0.08)})
+# model = load_model('model.h5', custom_objects={"loss": weighted_binary_crossentropy(0.92, 0.08)})
+model = load_model('custom_trained_model.h5', compile=False)
 
 # model.summary()
 
-img = load_img("test.png", color_mode="rgb")
-label = load_img("test_real_label.png", color_mode="grayscale")
+img = load_img("test2.png", color_mode="rgb")
+label = load_img("test2_real_label.png", color_mode="grayscale")
 x_img = img_to_array(img)
 x_img = resize(x_img, (IM_HEIGHT, IM_WIDTH, 3), mode="constant", preserve_range=True)
 x_img = x_img / 255.0
