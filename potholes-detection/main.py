@@ -15,7 +15,8 @@ im_height = 400
 border = 5
 
 # load the best model
-model = load_model('model-unet-3.h5', custom_objects={"loss": weighted_binary_crossentropy(0.92, 0.08)})
+# model = load_model('model-unet-3.h5', custom_objects={"loss": weighted_binary_crossentropy(0.92, 0.08)})
+model = load_model('custom_trained_model.h5')
 
 # model.summary()
 
