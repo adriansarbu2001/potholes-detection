@@ -8,7 +8,7 @@ x, y = read_images(rgb_path="data/testing/rgb/", label_path="data/testing/label/
 test_generator = generator(x=x, y=y)
 
 # load the best model
-model = load_model("model.h5", custom_objects={"loss": weighted_binary_crossentropy(0.92, 0.08)})
+model = load_model("custom_trained_model.h5")
 
 # model.summary()
 

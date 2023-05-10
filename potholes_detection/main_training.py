@@ -3,7 +3,7 @@ import keras.metrics
 import tensorflow as tf
 import numpy as np
 from keras.losses import BinaryCrossentropy
-from keras.metrics import MeanIoU, Accuracy
+from keras.metrics import MeanIoU, Accuracy, Mean
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.optimizers import Adam
 
@@ -34,63 +34,84 @@ model = get_unet(am_scheme=(AM.DUAL, AM.CHANNEL, AM.CHANNEL, AM.CHANNEL, AM.POSI
 #               loss=weighted_binary_crossentropy(POTHOLE_WEIGHT, BACKGROUND_WEIGHT),
 #               metrics=[MeanIoU(num_classes=2), "accuracy"])
 #
-# callbacks = [
-#     EarlyStopping(patience=10, verbose=1),
-#     ReduceLROnPlateau(factor=0.1, patience=5, min_lr=1e-8, verbose=1),
-#     ModelCheckpoint("model.h5", verbose=1, save_best_only=True),
-# ]
-#
 # results = model.fit(train_generator, epochs=100, callbacks=callbacks, validation_data=valid_generator)
 #
 # plot_learning_curve(results=results)
 
-# Instantiate one optimizer for the discriminator and another for the generator.
 optimizer = Adam(learning_rate=1e-4)
+optimizer.lr.assign(1e-4)
 
 # Instantiate a loss function.
 loss_fn = weighted_binary_crossentropy(POTHOLE_WEIGHT, BACKGROUND_WEIGHT)
+# loss_fn = BinaryCrossentropy()
 
 # Prepare the metrics.
+train_loss_metric = Mean(name='train_loss')
+val_loss_metric = Mean(name='val_loss')
 train_acc_metric = MeanIoU(num_classes=2)
 val_acc_metric = MeanIoU(num_classes=2)
 
 
 @tf.function
 def train_step(x, y):
+    # Forward pass
     with tf.GradientTape() as tape:
         y_pred = model(x, training=True)
-        y_pred = tf.where(y_pred >= 0.5, 1, 0)
         loss_value = loss_fn(y, y_pred)
+        y_pred = tf.where(y_pred >= 0.5, 1.0, 0.0)
         # Add any extra losses created during the forward pass.
         loss_value += sum(model.losses)
 
+    # Backward pass
     grads = tape.gradient(loss_value, model.trainable_weights)
     optimizer.apply_gradients(zip(grads, model.trainable_weights))
+
+    train_loss_metric.update_state(loss_value)
     train_acc_metric.update_state(y, y_pred)
-    return loss_value
 
 
 @tf.function
 def test_step(x, y):
     y_pred = model(x, training=False)
-    y_pred = tf.where(y_pred >= 0.5, 1, 0)
+    loss_value = loss_fn(y, y_pred)
+    y_pred = tf.where(y_pred >= 0.5, 1.0, 0.0)
+
+    val_loss_metric.update_state(loss_value)
     val_acc_metric.update_state(y, y_pred)
 
 
-start_time = time.time()
+# _callbacks = [
+#     EarlyStopping(patience=10, verbose=1),
+#     ReduceLROnPlateau(factor=0.1, patience=5, min_lr=1e-8, verbose=1),
+#     ModelCheckpoint("custom_trained_model_2.h5", verbose=1, save_best_only=True),
+# ]
+#
+# callbacks = tf.keras.callbacks.CallbackList(
+#     _callbacks, add_history=True, model=model)
+#
+# logs = {}
+# callbacks.on_train_begin(logs=logs)
 epochs = 50
+start_time = time.time()
 for epoch in range(epochs):
+    # callbacks.on_epoch_begin(epoch, logs=logs)
     print("\nStart of epoch %d" % (epoch,))
     epoch_start_time = time.time()
 
     # Iterate over the batches of the dataset.
     for step, (x_batch_train, y_batch_train) in enumerate(train_generator):
-        loss_value = train_step(x_batch_train, y_batch_train)
+        # callbacks.on_batch_begin(step, logs=logs)
+        # callbacks.on_train_batch_begin(step, logs=logs)
+
+        train_step(x_batch_train, y_batch_train)
+
+        # callbacks.on_train_batch_end(step, logs=logs)
+        # callbacks.on_batch_end(step, logs=logs)
 
         if step == 1:
             print(
                 "Training loss (for one batch) at step %d: %.4f"
-                % (step, float(loss_value))
+                % (step, float(train_loss_metric.result()))
             )
             print("Seen so far: %d samples" % ((step + 1) * BATCH_SIZE))
 
@@ -100,15 +121,25 @@ for epoch in range(epochs):
 
     # Reset training metrics at the end of each epoch
     train_acc_metric.reset_states()
+    train_loss_metric.reset_states()
 
     # Run a validation loop at the end of each epoch.
     for x_batch_val, y_batch_val in valid_generator:
         test_step(x_batch_val, y_batch_val)
 
+    # callbacks.on_epoch_end(epoch, logs=logs)
+
     val_acc = val_acc_metric.result()
     val_acc_metric.reset_states()
+    val_loss_metric.reset_states()
     print("Validation meanIoU: %.4f" % (float(val_acc),))
     print("Time taken: %.2fs" % (time.time() - epoch_start_time))
+
+    # print(model.stop_training)
+    # if model.stop_training:
+    #     break
+
+# callbacks.on_train_end(logs=logs)
 
 total_time = time.time() - start_time
 print()
