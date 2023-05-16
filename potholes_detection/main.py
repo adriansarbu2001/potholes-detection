@@ -23,7 +23,7 @@ model = load_model('custom_trained_model.h5')
 app = Flask(__name__)
 
 
-@app.route('/potholes_detection', methods=['POST'])
+@app.route('/potholes-detection', methods=['POST'])
 def get_contour():
     try:
         print("REQUEST RECEIVED")
