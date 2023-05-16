@@ -11,29 +11,7 @@ transforms = A.Compose([
 ])
 
 
-def _augment_images(image, mask):
-    transformed = transforms(image=image, mask=mask)
-
-    transformed_image = tf.cast(transformed["image"], tf.float32)
-    transformed_mask = tf.cast(transformed["mask"], tf.uint8)
-
-    # tf.print(type(transformed_image), type(transformed_mask))
-    return transformed_image, transformed_mask
-
-
-def _set_shapes(img, label):
-    img.set_shape((IM_HEIGHT, IM_WIDTH, 3))
-    label.set_shape((IM_HEIGHT, IM_WIDTH, 1))
-    return img, label
-
-
-def generator(x, y):
-    x_generator = tf.data.Dataset \
-        .from_tensor_slices(x)
-
-    y_generator = tf.data.Dataset \
-        .from_tensor_slices(y)
-
+def zip_generator(x_generator, y_generator):
     xy_generator = tf.data.Dataset \
         .zip((x_generator, y_generator)) \
         .batch(BATCH_SIZE) \
@@ -42,12 +20,20 @@ def generator(x, y):
     return xy_generator
 
 
-def generator_with_augmentation(x, y):
-    x_generator = tf.data.Dataset \
-        .from_tensor_slices(x)
+def zip_generator_with_augmentation(x_generator, y_generator):
+    def _augment_images(image, mask):
+        transformed = transforms(image=image, mask=mask)
 
-    y_generator = tf.data.Dataset \
-        .from_tensor_slices(y)
+        transformed_image = tf.cast(transformed["image"], tf.float32)
+        transformed_mask = tf.cast(transformed["mask"], tf.uint8)
+
+        # tf.print(type(transformed_image), type(transformed_mask))
+        return transformed_image, transformed_mask
+
+    def _set_shapes(img, label):
+        img.set_shape((IM_HEIGHT, IM_WIDTH, 3))
+        label.set_shape((IM_HEIGHT, IM_WIDTH, 1))
+        return img, label
 
     xy_generator = tf.data.Dataset \
         .zip((x_generator, y_generator)) \
