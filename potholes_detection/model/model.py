@@ -8,7 +8,7 @@ from keras.optimizers import Adam
 
 from potholes_detection.model.attention_modules import AM
 from potholes_detection.utils.constants import IM_HEIGHT, IM_WIDTH, POTHOLE_WEIGHT, BACKGROUND_WEIGHT
-from potholes_detection.utils.custom_losses import weighted_binary_crossentropy
+from potholes_detection.utils.custom_losses import weighted_binary_crossentropy, focal_loss, weighted_focal_loss
 
 
 def _conv2d_block(input_tensor, n_filters, kernel_size=3, batchnorm=True):
@@ -83,9 +83,10 @@ def get_unet(am_scheme=(AM.NONE, AM.NONE, AM.NONE, AM.NONE, AM.NONE), n_filters=
 
 
 def get_optimizer():
-    return Adam(learning_rate=1e-4)
+    return Adam(learning_rate=1e-3)
 
 
 def get_loss_fn():
     # return BinaryCrossentropy()
-    return weighted_binary_crossentropy(POTHOLE_WEIGHT, BACKGROUND_WEIGHT)
+    # return weighted_binary_crossentropy(POTHOLE_WEIGHT, BACKGROUND_WEIGHT)
+    return weighted_focal_loss(weight_foreground=POTHOLE_WEIGHT, weight_background=BACKGROUND_WEIGHT, gamma=1)

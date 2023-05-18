@@ -11,7 +11,7 @@ x_generator, y_generator = read_images(rgb_path="data/testing/rgb/", label_path=
 test_generator = zip_generator(x_generator=x_generator, y_generator=y_generator)
 
 # load the best model
-model = load_model("custom_trained_model_v3.h5", compile=False)
+model = load_model("custom_trained_model.h5", compile=False)
 
 test_iou_metric = MeanIoU(num_classes=2)
 test_acc_metric = Accuracy()

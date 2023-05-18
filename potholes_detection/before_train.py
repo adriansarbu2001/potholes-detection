@@ -4,29 +4,22 @@ import matplotlib.pyplot as plt
 
 from skimage.transform import resize
 from keras.utils import img_to_array, load_img
+from utils.read_data import read_images
+from utils.augmentation import zip_generator, zip_generator_with_augmentation
 
 plt.style.use("ggplot")
 
-# Set some parameters
-im_width = 400
-im_height = 400
-border = 5
+x_generator, y_generator = read_images("data/training/rgb/", "data/training/label/")
 
-ids = next(os.walk("data/training/rgb"))[2]  # list of names all images in the given path
-print("No. of images = ", len(ids))
-
-y_train = np.zeros((len(ids), im_height, im_width, 1), dtype=np.float32)
+generator = zip_generator_with_augmentation(x_generator, y_generator)
+# generator = zip_generator(x_generator, y_generator)
 
 ratios = []
-for n, id_ in zip(range(len(ids)), ids):
-    # Load masks
-    mask = img_to_array(load_img("data/training/label/" + id_, color_mode='grayscale'))
-    mask = resize(mask, (400, 400, 1), mode='constant', preserve_range=True)
-    # Save images
-    y_train[n] = mask / 255.0
+for x_batch, y_batch in generator:
+    for mask in y_batch:
+        unique, counts = np.unique(mask, return_counts=True)
+        ratios.append(counts[1] / (counts[0] + counts[1]))
 
-    unique, counts = np.unique(mask, return_counts=True)
-    ratios.append(counts[1] / (counts[0] + counts[1]))
 
 print(sum(ratios) / len(ratios))
 plt.xlabel("Pothole area / image area", fontsize=16)

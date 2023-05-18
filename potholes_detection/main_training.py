@@ -26,7 +26,7 @@ valid_generator = zip_generator(x_generator=x_valid_generator, y_generator=y_val
 
 # plot_from_generator(generator=train_generator)
 
-model = get_unet(am_scheme=(AM.NONE, AM.NONE, AM.NONE, AM.NONE, AM.NONE),
+model = get_unet(am_scheme=(AM.POSITION, AM.CHANNEL, AM.CHANNEL, AM.CHANNEL, AM.DUAL),
                  n_filters=16,
                  dropout=0.05,
                  batchnorm=True)
@@ -93,7 +93,7 @@ def test_step(x, y):
 
 early_stopping_count = 0
 reduce_lr_count = 0
-early_stopping_patience = 20
+early_stopping_patience = 25
 reduce_lr_patience = 10
 reduce_lr_factor = 0.1
 min_lr = 1e-8
@@ -101,6 +101,7 @@ max_epochs = 200
 loss_history = []
 start_time = time.time()
 metrics_history = {"train_loss": [], "train_iou": [], "valid_loss": [], "valid_iou": []}
+
 for epoch in range(max_epochs):
     # callbacks.on_epoch_begin(epoch, logs=logs)
     print("\nStart of epoch %d" % (epoch,))
