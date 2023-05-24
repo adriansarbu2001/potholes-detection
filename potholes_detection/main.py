@@ -39,9 +39,16 @@ def get_contour():
         x_img = x_img / 255.0
 
         res = model.predict(np.array([x_img]))[0]
-        res = np.where(res > 0.5, 1, res)
-        res = np.where(res < 0.5, 0, res)
+        res = np.where(res > 0.3, 1, res)
+        res = np.where(res < 0.3, 0, res)
         # edges = filters.sobel(res)
+
+        # morphological operations
+        kernel = np.ones((5, 5), np.uint8)
+        # remove background noise
+        res = cv2.morphologyEx(res, cv2.MORPH_OPEN, kernel)
+        # remove foreground noise
+        res = cv2.morphologyEx(res, cv2.MORPH_CLOSE, kernel)
 
         norm_res = cv2.normalize(res, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
         norm_res = cv2.cvtColor(norm_res, cv2.COLOR_GRAY2BGR)
