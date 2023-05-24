@@ -44,3 +44,15 @@ def zip_generator_with_augmentation(x_generator, y_generator):
         .prefetch(tf.data.AUTOTUNE)
 
     return xy_generator
+
+
+def opening2d(input, kernel):
+    eroded = tf.nn.erosion2d(input, kernel, [1, 1, 1, 1], 'SAME', "NHWC", [1, 1, 1, 1])
+    opened = tf.nn.dilation2d(eroded, kernel, [1, 1, 1, 1], 'SAME', "NHWC", [1, 1, 1, 1])
+    return opened
+
+
+def closing2d(input, kernel):
+    dilated = tf.nn.dilation2d(input, kernel, [1, 1, 1, 1], 'SAME', "NHWC", [1, 1, 1, 1])
+    closed = tf.nn.erosion2d(dilated, kernel, [1, 1, 1, 1], 'SAME', "NHWC", [1, 1, 1, 1])
+    return closed

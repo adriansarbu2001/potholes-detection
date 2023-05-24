@@ -1,10 +1,14 @@
 import time
+import cv2
 
+import numpy as np
 import tensorflow as tf
 from keras.metrics import MeanIoU, Accuracy
 from keras.models import load_model
+
+from potholes_detection.utils.constants import IM_HEIGHT, IM_WIDTH
 from utils.read_data import read_images
-from utils.augmentation import zip_generator
+from utils.augmentation import zip_generator, opening2d, closing2d
 
 print("Reading test images...")
 x_generator, y_generator = read_images(rgb_path="data/testing/rgb/", label_path="data/testing/label/")
@@ -21,6 +25,14 @@ test_acc_metric = Accuracy()
 def test_step(x, y):
     y_pred = model(x, training=False)
     y_pred = tf.where(y_pred >= 0.5, 1.0, 0.0)
+
+    # morphological operations
+    kernel = np.ones((5, 5, 1), np.float32)
+    # remove background noise
+    y_pred = opening2d(input=y_pred, kernel=kernel)
+    # remove foreground noise
+    y_pred = closing2d(input=y_pred, kernel=kernel)
+
     test_iou_metric.update_state(y, y_pred)
     test_acc_metric.update_state(y, y_pred)
 
