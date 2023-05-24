@@ -4,6 +4,7 @@ import 'dart:io';
 
 class PotholesDetectionProvider extends ChangeNotifier {
   final String baseUri = "http://10.0.2.2:5000";
+  // final String baseUri = "http://78.96.179.191:5000";
   Image? image = null;
   bool loading = false;
   String? error = null;
