@@ -83,10 +83,11 @@ def get_unet(am_scheme=(AM.NONE, AM.NONE, AM.NONE, AM.NONE, AM.NONE), n_filters=
 
 
 def get_optimizer():
-    return Adam(learning_rate=1e-3)
+    return Adam(learning_rate=1e-4)
 
 
 def get_loss_fn():
     # return BinaryCrossentropy()
     # return weighted_binary_crossentropy(POTHOLE_WEIGHT, BACKGROUND_WEIGHT)
-    return weighted_focal_loss(weight_foreground=POTHOLE_WEIGHT, weight_background=BACKGROUND_WEIGHT, gamma=1)
+    return focal_loss(gamma=1)
+    # return weighted_focal_loss(weight_foreground=POTHOLE_WEIGHT, weight_background=BACKGROUND_WEIGHT, gamma=1)

@@ -93,11 +93,11 @@ def test_step(x, y):
 
 early_stopping_count = 0
 reduce_lr_count = 0
-early_stopping_patience = 25
+early_stopping_patience = 30
 reduce_lr_patience = 10
-reduce_lr_factor = 0.1
+reduce_lr_factor = 0.5
 min_lr = 1e-8
-max_epochs = 200
+max_epochs = 500
 loss_history = []
 start_time = time.time()
 metrics_history = {"train_loss": [], "train_iou": [], "valid_loss": [], "valid_iou": []}
