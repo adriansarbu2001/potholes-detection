@@ -1,4 +1,5 @@
 import numpy as np
+import tensorflow as tf
 import matplotlib.pyplot as plt
 
 from skimage.transform import resize
@@ -6,6 +7,7 @@ from skimage.transform import resize
 from keras.models import load_model
 from keras.utils import img_to_array, load_img
 
+from potholes_detection.utils.augmentation import opening2d, closing2d
 from utils.custom_losses import weighted_binary_crossentropy
 from utils.constants import IM_HEIGHT, IM_WIDTH
 
@@ -25,9 +27,17 @@ label = img_to_array(label)
 label = resize(label, (IM_HEIGHT, IM_WIDTH, 1), mode="constant", preserve_range=True)
 label = label / 255
 
-res = model.predict(np.array([x_img]))
-res = np.where(res >= 0.5, 1, res)
-res = np.where(res < 0.5, 0, res)
+res = model(np.array([x_img]), training=False)
+res = tf.where(res >= 0.5, 1.0, 0.0)
+
+# morphological operations
+kernel = np.ones((5, 5, 1), np.float32)
+# remove background noise
+res = opening2d(input=res, kernel=kernel)
+# remove foreground noise
+res = closing2d(input=res, kernel=kernel)
+
+res = res.numpy()
 
 # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
 fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 15))
