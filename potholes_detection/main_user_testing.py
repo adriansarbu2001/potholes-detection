@@ -44,7 +44,7 @@ fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 15))
 
 ax1.imshow(x_img)
 # draw a boundary (contour) in the original image separating pothole and background areas
-ax1.contour(res[0].squeeze(), colors="k", linewidths=5, levels=[0.5])
+ax1.contour(res[0].squeeze(), colors="k", linewidths=3, levels=[0.5])
 ax1.set_title("Test image")
 
 ax2.imshow(res[0].squeeze(), cmap="gray", interpolation="bilinear")
