@@ -1,7 +1,9 @@
 import sys
 import cv2
 
+import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 
 from skimage.transform import resize
 
@@ -23,6 +25,18 @@ model = load_model('custom_trained_model_v5.h5', compile=False)
 app = Flask(__name__)
 
 
+def opening2d(input, kernel):
+    eroded = tf.nn.erosion2d(input, kernel, [1, 1, 1, 1], 'SAME', "NHWC", [1, 1, 1, 1])
+    opened = tf.nn.dilation2d(eroded, kernel, [1, 1, 1, 1], 'SAME', "NHWC", [1, 1, 1, 1])
+    return opened
+
+
+def closing2d(input, kernel):
+    dilated = tf.nn.dilation2d(input, kernel, [1, 1, 1, 1], 'SAME', "NHWC", [1, 1, 1, 1])
+    closed = tf.nn.erosion2d(dilated, kernel, [1, 1, 1, 1], 'SAME', "NHWC", [1, 1, 1, 1])
+    return closed
+
+
 @app.route('/potholes-detection', methods=['POST'])
 def get_contour():
     try:
@@ -38,17 +52,18 @@ def get_contour():
         x_img = resize(x_img, (400, 400, 3), mode='constant', preserve_range=True)
         x_img = x_img / 255.0
 
-        res = model.predict(np.array([x_img]))[0]
-        res = np.where(res > 0.3, 1, res)
-        res = np.where(res < 0.3, 0, res)
-        # edges = filters.sobel(res)
+        res = model(np.array([x_img]), training=False)
+        res = tf.where(res >= 0.5, 1.0, 0.0)
 
         # morphological operations
-        kernel = np.ones((5, 5), np.uint8)
+        kernel = np.ones((5, 5, 1), np.float32)
         # remove background noise
-        res = cv2.morphologyEx(res, cv2.MORPH_OPEN, kernel)
+        res = opening2d(input=res, kernel=kernel)
         # remove foreground noise
-        res = cv2.morphologyEx(res, cv2.MORPH_CLOSE, kernel)
+        res = closing2d(input=res, kernel=kernel)
+
+        res = res.numpy()[0]
+        # edges = filters.sobel(res)
 
         norm_res = cv2.normalize(res, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
         norm_res = cv2.cvtColor(norm_res, cv2.COLOR_GRAY2BGR)
