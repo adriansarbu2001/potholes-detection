@@ -23,6 +23,13 @@ print("Reading validation images...")
 x_valid_generator, y_valid_generator = read_images(rgb_path="data/pothole600/validation/rgb/",
                                                    label_path="data/pothole600/validation/label/")
 
+# print("Reading train images...")
+# x_train_generator, y_train_generator = read_images(rgb_path="data/potholes_on_road/training/images/",
+#                                                    label_path="data/potholes_on_road/training/masks/")
+# print("Reading validation images...")
+# x_valid_generator, y_valid_generator = read_images(rgb_path="data/potholes_on_road/validation/images/",
+#                                                    label_path="data/potholes_on_road/validation/masks/")
+
 train_generator = zip_generator_with_augmentation(x_generator=x_train_generator, y_generator=y_train_generator)
 valid_generator = zip_generator(x_generator=x_valid_generator, y_generator=y_valid_generator)
 

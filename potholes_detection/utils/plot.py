@@ -9,7 +9,7 @@ def plot_from_generator(generator):
         img = x[0][0]
         mask = x[1][0]
 
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 15))
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 10))
 
         ax1.imshow(img)
         ax1.contour(mask.squeeze(), colors="k", linewidths=5, levels=[0.5])

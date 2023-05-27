@@ -6,9 +6,9 @@ from potholes_detection.utils.constants import IM_HEIGHT, IM_WIDTH, BATCH_SIZE
 
 transforms = A.Compose([
     A.HorizontalFlip(p=0.5),
-    A.RandomRotate90(p=0.5),
-    A.RandomResizedCrop(height=IM_HEIGHT, width=IM_WIDTH, scale=(0.5, 1), ratio=(1, 1), p=0.5),
-#    A.RandomBrightnessContrast(p=0.5),
+#    A.RandomRotate90(p=0.5),
+#    A.RandomResizedCrop(height=IM_HEIGHT, width=IM_WIDTH, scale=(0.5, 1), ratio=(1, 1), p=0.5),
+    A.RandomBrightnessContrast(p=0.5),
 ])
 
 
