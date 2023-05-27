@@ -17,9 +17,11 @@ print("Num GPUs Available:", len(tf.config.experimental.list_physical_devices('G
 
 
 print("Reading train images...")
-x_train_generator, y_train_generator = read_images(rgb_path="data/training/rgb/", label_path="data/training/label/")
+x_train_generator, y_train_generator = read_images(rgb_path="data/pothole600/training/rgb/",
+                                                   label_path="data/pothole600/training/label/")
 print("Reading validation images...")
-x_valid_generator, y_valid_generator = read_images(rgb_path="data/validation/rgb/", label_path="data/validation/label/")
+x_valid_generator, y_valid_generator = read_images(rgb_path="data/pothole600/validation/rgb/",
+                                                   label_path="data/pothole600/validation/label/")
 
 train_generator = zip_generator_with_augmentation(x_generator=x_train_generator, y_generator=y_train_generator)
 valid_generator = zip_generator(x_generator=x_valid_generator, y_generator=y_valid_generator)

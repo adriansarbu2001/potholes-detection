@@ -11,7 +11,8 @@ from utils.read_data import read_images
 from utils.augmentation import zip_generator, opening2d, closing2d
 
 print("Reading test images...")
-x_generator, y_generator = read_images(rgb_path="data/testing/rgb/", label_path="data/testing/label/")
+x_generator, y_generator = read_images(rgb_path="data/pothole600/testing/rgb/",
+                                       label_path="data/pothole600/testing/label/")
 test_generator = zip_generator(x_generator=x_generator, y_generator=y_generator)
 
 # load the best model
