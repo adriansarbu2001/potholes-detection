@@ -14,7 +14,7 @@ from utils.constants import IM_HEIGHT, IM_WIDTH
 # Set some parameters
 
 # model = load_model('model.h5', custom_objects={"loss": weighted_binary_crossentropy(0.92, 0.08)})
-model = load_model('saved_models/model.h5', compile=False)
+model = load_model('saved_models/model_v3.h5', compile=False)
 
 # model.summary()
 
