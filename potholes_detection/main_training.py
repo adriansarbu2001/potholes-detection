@@ -15,20 +15,29 @@ import matplotlib.pyplot as plt
 print("Tensorflow version", tf.__version__)
 print("Num GPUs Available:", len(tf.config.experimental.list_physical_devices('GPU')), '\n')
 
+with open("train_log.txt", "w") as f:
+    f.write("")
 
-print("Reading train images...")
-x_train_generator, y_train_generator = read_images(rgb_path="data/pothole600/training/rgb/",
-                                                   label_path="data/pothole600/training/label/")
-print("Reading validation images...")
-x_valid_generator, y_valid_generator = read_images(rgb_path="data/pothole600/validation/rgb/",
-                                                   label_path="data/pothole600/validation/label/")
+
+def log(text):
+    print(text)
+    with open("train_log.txt", "a") as f:
+        f.write(text + "\n")
+
 
 # print("Reading train images...")
-# x_train_generator, y_train_generator = read_images(rgb_path="data/potholes_on_road/training/images/",
-#                                                    label_path="data/potholes_on_road/training/masks/")
+# x_train_generator, y_train_generator = read_images(rgb_path="data/pothole600/training/rgb/",
+#                                                    label_path="data/pothole600/training/label/")
 # print("Reading validation images...")
-# x_valid_generator, y_valid_generator = read_images(rgb_path="data/potholes_on_road/validation/images/",
-#                                                    label_path="data/potholes_on_road/validation/masks/")
+# x_valid_generator, y_valid_generator = read_images(rgb_path="data/pothole600/validation/rgb/",
+#                                                    label_path="data/pothole600/validation/label/")
+
+print("Reading train images...")
+x_train_generator, y_train_generator = read_images(rgb_path="data/potholes_on_road/training/images/",
+                                                   label_path="data/potholes_on_road/training/masks/")
+print("Reading validation images...")
+x_valid_generator, y_valid_generator = read_images(rgb_path="data/potholes_on_road/validation/images/",
+                                                   label_path="data/potholes_on_road/validation/masks/")
 
 train_generator = zip_generator_with_augmentation(x_generator=x_train_generator, y_generator=y_train_generator)
 valid_generator = zip_generator(x_generator=x_valid_generator, y_generator=y_valid_generator)
@@ -73,7 +82,7 @@ def train_step(x, y):
     grads = tape.gradient(loss_value, model.trainable_weights)
     optimizer.apply_gradients(zip(grads, model.trainable_weights))
 
-    y_pred = tf.where(y_pred >= 0.5, 1.0, 0.0)
+    y_pred = tf.where(y_pred >= 0.4, 1, 0)
     train_loss_metric.update_state(loss_value)
     train_iou_metric.update_state(y, y_pred)
 
@@ -82,7 +91,7 @@ def train_step(x, y):
 def test_step(x, y):
     y_pred = model(x, training=False)
     loss_value = loss_fn(y, y_pred)
-    y_pred = tf.where(y_pred >= 0.5, 1.0, 0.0)
+    y_pred = tf.where(y_pred >= 0.4, 1, 0)
 
     val_loss_metric.update_state(loss_value)
     val_iou_metric.update_state(y, y_pred)
@@ -111,10 +120,11 @@ loss_history = []
 start_time = time.time()
 metrics_history = {"train_loss": [], "train_iou": [], "valid_loss": [], "valid_iou": []}
 
+print()
 for epoch in range(max_epochs):
     # callbacks.on_epoch_begin(epoch, logs=logs)
-    print("\nStart of epoch %d" % (epoch,))
-    print("Current learning rate:", optimizer.learning_rate.numpy())
+    log("Start of epoch %d" % (epoch,))
+    log(f"Current learning rate: %.8g" % (optimizer.learning_rate.numpy(),))
     epoch_start_time = time.time()
 
     # Iterate over the batches of the dataset.
@@ -132,8 +142,8 @@ for epoch in range(max_epochs):
     train_loss = train_loss_metric.result()
     metrics_history["train_loss"].append(train_loss)
     metrics_history["train_iou"].append(train_iou)
-    print("Training loss over epoch: %.4f" % (float(train_loss),))
-    print("Training meanIoU over epoch: %.4f" % (float(train_iou),))
+    log("Training loss over epoch: %.4f" % (float(train_loss),))
+    log("Training meanIoU over epoch: %.4f" % (float(train_iou),))
 
     train_iou_metric.reset_states()
     train_loss_metric.reset_states()
@@ -148,8 +158,8 @@ for epoch in range(max_epochs):
     val_iou = val_iou_metric.result()
     metrics_history["valid_loss"].append(val_loss)
     metrics_history["valid_iou"].append(val_iou)
-    print("Validation loss over epoch: %.4f" % (float(val_loss),))
-    print("Validation meanIoU over epoch: %.4f" % (float(val_iou),))
+    log("Validation loss over epoch: %.4f" % (float(val_loss),))
+    log("Validation meanIoU over epoch: %.4f" % (float(val_iou),))
 
     val_iou_metric.reset_states()
     val_loss_metric.reset_states()
@@ -169,8 +179,8 @@ for epoch in range(max_epochs):
 
     # Model checkpoint callback
     if len(loss_history) == 1:
-        model.save("custom_trained_model.h5")
-        print("Model saved to \"custom_trained_model.h5\"")
+        model.save("saved_models/model.h5")
+        log("Model saved to \"model.h5\"")
 
     # Reduce learning rate callback
     if optimizer.learning_rate > min_lr and reduce_lr_count > reduce_lr_patience:
@@ -183,24 +193,25 @@ for epoch in range(max_epochs):
 
         new_lr = optimizer.learning_rate.numpy() * reduce_lr_factor
         reduce_lr_count = 0
-        print(f'Reducing learning rate to {new_lr}. No improvement in '
-              f'validation loss in the last {reduce_lr_patience} epochs.')
+        log(f'Reducing learning rate to {new_lr}. No improvement in '
+            f'validation loss in the last {reduce_lr_patience} epochs.')
         optimizer.learning_rate = new_lr
 
     # Early stopping callback
     if early_stopping_count > early_stopping_patience:
         early_stopping_count = 0
-        print(f'\nEarly stopping. No improvement in validation '
-              f'loss in the last {early_stopping_patience} epochs.')
-        print("Time taken over epoch: %.2fs" % (time.time() - epoch_start_time))
+        log(f'\nEarly stopping. No improvement in validation '
+            f'loss in the last {early_stopping_patience} epochs.')
+        log("Time taken over epoch: %.2fs" % (time.time() - epoch_start_time))
         break
-    print("Time taken over epoch: %.2fs" % (time.time() - epoch_start_time))
+    log("Time taken over epoch: %.2fs\n" % (time.time() - epoch_start_time))
 
 # callbacks.on_train_end(logs=logs)
 
-print()
 total_time = time.time() - start_time
-print("Total time taken: %.2d:%.2d:%.2d" % (total_time / 3600, (total_time / 60) % 60, total_time % 60))
+log("\nTotal time taken: %.2d:%.2d:%.2d" % (total_time / 3600, (total_time / 60) % 60, total_time % 60))
+
+model.save("last_model.h5")
 
 plt.figure(figsize=(8, 8))
 plt.title("Learning curve")

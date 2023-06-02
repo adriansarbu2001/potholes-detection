@@ -89,5 +89,5 @@ def get_optimizer():
 def get_loss_fn():
     # return BinaryCrossentropy()
     # return weighted_binary_crossentropy(POTHOLE_WEIGHT, BACKGROUND_WEIGHT)
-    return focal_loss(gamma=1)
-    # return weighted_focal_loss(weight_foreground=POTHOLE_WEIGHT, weight_background=BACKGROUND_WEIGHT, gamma=1)
+    return focal_loss(gamma=2)
+    # return weighted_focal_loss(weight_foreground=POTHOLE_WEIGHT, weight_background=BACKGROUND_WEIGHT, gamma=2)

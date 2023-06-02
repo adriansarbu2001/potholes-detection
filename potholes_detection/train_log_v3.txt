@@ -1,0 +1,629 @@
+Start of epoch 0
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0902
+Training meanIoU over epoch: 0.1346
+Validation loss over epoch: 0.0985
+Validation meanIoU over epoch: 0.0131
+Model saved to "model.h5"
+Time taken over epoch: 71.34s
+
+Start of epoch 1
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0475
+Training meanIoU over epoch: 0.3643
+Validation loss over epoch: 0.0392
+Validation meanIoU over epoch: 0.4756
+Model saved to "model.h5"
+Time taken over epoch: 54.28s
+
+Start of epoch 2
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0353
+Training meanIoU over epoch: 0.4849
+Validation loss over epoch: 0.0377
+Validation meanIoU over epoch: 0.4861
+Model saved to "model.h5"
+Time taken over epoch: 63.16s
+
+Start of epoch 3
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0291
+Training meanIoU over epoch: 0.5234
+Validation loss over epoch: 0.0319
+Validation meanIoU over epoch: 0.5155
+Model saved to "model.h5"
+Time taken over epoch: 66.30s
+
+Start of epoch 4
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0258
+Training meanIoU over epoch: 0.5407
+Validation loss over epoch: 0.0316
+Validation meanIoU over epoch: 0.5297
+Model saved to "model.h5"
+Time taken over epoch: 64.05s
+
+Start of epoch 5
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0242
+Training meanIoU over epoch: 0.5531
+Validation loss over epoch: 0.0302
+Validation meanIoU over epoch: 0.5337
+Model saved to "model.h5"
+Time taken over epoch: 58.64s
+
+Start of epoch 6
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0230
+Training meanIoU over epoch: 0.5598
+Validation loss over epoch: 0.0282
+Validation meanIoU over epoch: 0.5534
+Model saved to "model.h5"
+Time taken over epoch: 73.57s
+
+Start of epoch 7
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0221
+Training meanIoU over epoch: 0.5647
+Validation loss over epoch: 0.0285
+Validation meanIoU over epoch: 0.5303
+Time taken over epoch: 71.45s
+
+Start of epoch 8
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0204
+Training meanIoU over epoch: 0.5749
+Validation loss over epoch: 0.0276
+Validation meanIoU over epoch: 0.5482
+Model saved to "model.h5"
+Time taken over epoch: 71.88s
+
+Start of epoch 9
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0204
+Training meanIoU over epoch: 0.5743
+Validation loss over epoch: 0.0287
+Validation meanIoU over epoch: 0.5175
+Time taken over epoch: 65.20s
+
+Start of epoch 10
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0198
+Training meanIoU over epoch: 0.5759
+Validation loss over epoch: 0.0273
+Validation meanIoU over epoch: 0.5833
+Model saved to "model.h5"
+Time taken over epoch: 68.11s
+
+Start of epoch 11
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0192
+Training meanIoU over epoch: 0.5807
+Validation loss over epoch: 0.0315
+Validation meanIoU over epoch: 0.5110
+Time taken over epoch: 65.41s
+
+Start of epoch 12
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0179
+Training meanIoU over epoch: 0.5867
+Validation loss over epoch: 0.0267
+Validation meanIoU over epoch: 0.5959
+Model saved to "model.h5"
+Time taken over epoch: 68.07s
+
+Start of epoch 13
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0179
+Training meanIoU over epoch: 0.5848
+Validation loss over epoch: 0.0277
+Validation meanIoU over epoch: 0.5737
+Time taken over epoch: 65.69s
+
+Start of epoch 14
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0176
+Training meanIoU over epoch: 0.5886
+Validation loss over epoch: 0.0256
+Validation meanIoU over epoch: 0.5932
+Model saved to "model.h5"
+Time taken over epoch: 71.68s
+
+Start of epoch 15
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0171
+Training meanIoU over epoch: 0.5840
+Validation loss over epoch: 0.0231
+Validation meanIoU over epoch: 0.6113
+Model saved to "model.h5"
+Time taken over epoch: 65.06s
+
+Start of epoch 16
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0171
+Training meanIoU over epoch: 0.5957
+Validation loss over epoch: 0.0260
+Validation meanIoU over epoch: 0.5621
+Time taken over epoch: 66.89s
+
+Start of epoch 17
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0167
+Training meanIoU over epoch: 0.5872
+Validation loss over epoch: 0.0223
+Validation meanIoU over epoch: 0.6053
+Model saved to "model.h5"
+Time taken over epoch: 65.09s
+
+Start of epoch 18
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0165
+Training meanIoU over epoch: 0.5879
+Validation loss over epoch: 0.0216
+Validation meanIoU over epoch: 0.6254
+Model saved to "model.h5"
+Time taken over epoch: 63.81s
+
+Start of epoch 19
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0164
+Training meanIoU over epoch: 0.5897
+Validation loss over epoch: 0.0211
+Validation meanIoU over epoch: 0.5795
+Model saved to "model.h5"
+Time taken over epoch: 59.14s
+
+Start of epoch 20
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0157
+Training meanIoU over epoch: 0.5948
+Validation loss over epoch: 0.0199
+Validation meanIoU over epoch: 0.6035
+Model saved to "model.h5"
+Time taken over epoch: 70.44s
+
+Start of epoch 21
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0155
+Training meanIoU over epoch: 0.5940
+Validation loss over epoch: 0.0215
+Validation meanIoU over epoch: 0.6095
+Time taken over epoch: 71.22s
+
+Start of epoch 22
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0151
+Training meanIoU over epoch: 0.5933
+Validation loss over epoch: 0.0222
+Validation meanIoU over epoch: 0.5806
+Time taken over epoch: 62.22s
+
+Start of epoch 23
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0155
+Training meanIoU over epoch: 0.5855
+Validation loss over epoch: 0.0214
+Validation meanIoU over epoch: 0.6422
+Time taken over epoch: 67.85s
+
+Start of epoch 24
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0149
+Training meanIoU over epoch: 0.5958
+Validation loss over epoch: 0.0190
+Validation meanIoU over epoch: 0.6269
+Model saved to "model.h5"
+Time taken over epoch: 70.03s
+
+Start of epoch 25
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0148
+Training meanIoU over epoch: 0.5977
+Validation loss over epoch: 0.0180
+Validation meanIoU over epoch: 0.6599
+Model saved to "model.h5"
+Time taken over epoch: 63.50s
+
+Start of epoch 26
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0146
+Training meanIoU over epoch: 0.6064
+Validation loss over epoch: 0.0176
+Validation meanIoU over epoch: 0.6570
+Model saved to "model.h5"
+Time taken over epoch: 60.33s
+
+Start of epoch 27
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0143
+Training meanIoU over epoch: 0.6038
+Validation loss over epoch: 0.0219
+Validation meanIoU over epoch: 0.6353
+Time taken over epoch: 55.45s
+
+Start of epoch 28
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0139
+Training meanIoU over epoch: 0.6066
+Validation loss over epoch: 0.0186
+Validation meanIoU over epoch: 0.6018
+Time taken over epoch: 60.75s
+
+Start of epoch 29
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0137
+Training meanIoU over epoch: 0.6085
+Validation loss over epoch: 0.0197
+Validation meanIoU over epoch: 0.6437
+Time taken over epoch: 63.74s
+
+Start of epoch 30
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0137
+Training meanIoU over epoch: 0.6174
+Validation loss over epoch: 0.0188
+Validation meanIoU over epoch: 0.5875
+Time taken over epoch: 63.02s
+
+Start of epoch 31
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0135
+Training meanIoU over epoch: 0.6144
+Validation loss over epoch: 0.0189
+Validation meanIoU over epoch: 0.6204
+Time taken over epoch: 60.72s
+
+Start of epoch 32
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0129
+Training meanIoU over epoch: 0.6184
+Validation loss over epoch: 0.0184
+Validation meanIoU over epoch: 0.6323
+Time taken over epoch: 57.54s
+
+Start of epoch 33
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0130
+Training meanIoU over epoch: 0.6218
+Validation loss over epoch: 0.0189
+Validation meanIoU over epoch: 0.6350
+Time taken over epoch: 56.72s
+
+Start of epoch 34
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0126
+Training meanIoU over epoch: 0.6191
+Validation loss over epoch: 0.0188
+Validation meanIoU over epoch: 0.6208
+Time taken over epoch: 59.34s
+
+Start of epoch 35
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0127
+Training meanIoU over epoch: 0.6268
+Validation loss over epoch: 0.0267
+Validation meanIoU over epoch: 0.6020
+Time taken over epoch: 57.30s
+
+Start of epoch 36
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0127
+Training meanIoU over epoch: 0.6229
+Validation loss over epoch: 0.0202
+Validation meanIoU over epoch: 0.6063
+Reducing learning rate to 4.999999873689376e-05. No improvement in validation loss in the last 10 epochs.
+Time taken over epoch: 58.42s
+
+Start of epoch 37
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0125
+Training meanIoU over epoch: 0.6291
+Validation loss over epoch: 0.0175
+Validation meanIoU over epoch: 0.6725
+Model saved to "model.h5"
+Time taken over epoch: 58.40s
+
+Start of epoch 38
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0115
+Training meanIoU over epoch: 0.6445
+Validation loss over epoch: 0.0164
+Validation meanIoU over epoch: 0.6632
+Model saved to "model.h5"
+Time taken over epoch: 62.37s
+
+Start of epoch 39
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0113
+Training meanIoU over epoch: 0.6495
+Validation loss over epoch: 0.0157
+Validation meanIoU over epoch: 0.6897
+Model saved to "model.h5"
+Time taken over epoch: 58.33s
+
+Start of epoch 40
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0108
+Training meanIoU over epoch: 0.6548
+Validation loss over epoch: 0.0166
+Validation meanIoU over epoch: 0.6731
+Time taken over epoch: 60.55s
+
+Start of epoch 41
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0106
+Training meanIoU over epoch: 0.6619
+Validation loss over epoch: 0.0158
+Validation meanIoU over epoch: 0.6636
+Time taken over epoch: 65.82s
+
+Start of epoch 42
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0109
+Training meanIoU over epoch: 0.6555
+Validation loss over epoch: 0.0174
+Validation meanIoU over epoch: 0.6799
+Time taken over epoch: 58.42s
+
+Start of epoch 43
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0106
+Training meanIoU over epoch: 0.6564
+Validation loss over epoch: 0.0165
+Validation meanIoU over epoch: 0.6906
+Time taken over epoch: 60.78s
+
+Start of epoch 44
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0104
+Training meanIoU over epoch: 0.6668
+Validation loss over epoch: 0.0154
+Validation meanIoU over epoch: 0.6452
+Model saved to "model.h5"
+Time taken over epoch: 61.35s
+
+Start of epoch 45
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0109
+Training meanIoU over epoch: 0.6550
+Validation loss over epoch: 0.0196
+Validation meanIoU over epoch: 0.6665
+Time taken over epoch: 64.06s
+
+Start of epoch 46
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0103
+Training meanIoU over epoch: 0.6675
+Validation loss over epoch: 0.0170
+Validation meanIoU over epoch: 0.6699
+Time taken over epoch: 57.80s
+
+Start of epoch 47
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0103
+Training meanIoU over epoch: 0.6665
+Validation loss over epoch: 0.0168
+Validation meanIoU over epoch: 0.6873
+Time taken over epoch: 62.17s
+
+Start of epoch 48
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0097
+Training meanIoU over epoch: 0.6774
+Validation loss over epoch: 0.0173
+Validation meanIoU over epoch: 0.6827
+Time taken over epoch: 60.11s
+
+Start of epoch 49
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0099
+Training meanIoU over epoch: 0.6766
+Validation loss over epoch: 0.0214
+Validation meanIoU over epoch: 0.6579
+Time taken over epoch: 65.33s
+
+Start of epoch 50
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0098
+Training meanIoU over epoch: 0.6836
+Validation loss over epoch: 0.0166
+Validation meanIoU over epoch: 0.6876
+Time taken over epoch: 58.51s
+
+Start of epoch 51
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0101
+Training meanIoU over epoch: 0.6721
+Validation loss over epoch: 0.0188
+Validation meanIoU over epoch: 0.6910
+Time taken over epoch: 66.63s
+
+Start of epoch 52
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0096
+Training meanIoU over epoch: 0.6782
+Validation loss over epoch: 0.0200
+Validation meanIoU over epoch: 0.6792
+Time taken over epoch: 61.68s
+
+Start of epoch 53
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0091
+Training meanIoU over epoch: 0.6890
+Validation loss over epoch: 0.0174
+Validation meanIoU over epoch: 0.7009
+Time taken over epoch: 63.64s
+
+Start of epoch 54
+Current learning rate: 4.9999999e-05
+Training loss over epoch: 0.0090
+Training meanIoU over epoch: 0.6958
+Validation loss over epoch: 0.0169
+Validation meanIoU over epoch: 0.7056
+Reducing learning rate to 2.499999936844688e-05. No improvement in validation loss in the last 10 epochs.
+Time taken over epoch: 63.93s
+
+Start of epoch 55
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0086
+Training meanIoU over epoch: 0.7040
+Validation loss over epoch: 0.0196
+Validation meanIoU over epoch: 0.6921
+Time taken over epoch: 63.44s
+
+Start of epoch 56
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0082
+Training meanIoU over epoch: 0.7200
+Validation loss over epoch: 0.0188
+Validation meanIoU over epoch: 0.6990
+Time taken over epoch: 63.00s
+
+Start of epoch 57
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0085
+Training meanIoU over epoch: 0.7053
+Validation loss over epoch: 0.0186
+Validation meanIoU over epoch: 0.6901
+Time taken over epoch: 59.97s
+
+Start of epoch 58
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0080
+Training meanIoU over epoch: 0.7155
+Validation loss over epoch: 0.0213
+Validation meanIoU over epoch: 0.6767
+Time taken over epoch: 63.63s
+
+Start of epoch 59
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0079
+Training meanIoU over epoch: 0.7225
+Validation loss over epoch: 0.0216
+Validation meanIoU over epoch: 0.6727
+Time taken over epoch: 60.83s
+
+Start of epoch 60
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0079
+Training meanIoU over epoch: 0.7195
+Validation loss over epoch: 0.0184
+Validation meanIoU over epoch: 0.6907
+Time taken over epoch: 59.26s
+
+Start of epoch 61
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0082
+Training meanIoU over epoch: 0.7161
+Validation loss over epoch: 0.0192
+Validation meanIoU over epoch: 0.6936
+Time taken over epoch: 62.17s
+
+Start of epoch 62
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0075
+Training meanIoU over epoch: 0.7271
+Validation loss over epoch: 0.0188
+Validation meanIoU over epoch: 0.6942
+Time taken over epoch: 58.71s
+
+Start of epoch 63
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0074
+Training meanIoU over epoch: 0.7292
+Validation loss over epoch: 0.0202
+Validation meanIoU over epoch: 0.6844
+Time taken over epoch: 60.32s
+
+Start of epoch 64
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0076
+Training meanIoU over epoch: 0.7306
+Validation loss over epoch: 0.0199
+Validation meanIoU over epoch: 0.6857
+Time taken over epoch: 58.63s
+
+Start of epoch 65
+Current learning rate: 2.4999999e-05
+Training loss over epoch: 0.0077
+Training meanIoU over epoch: 0.7201
+Validation loss over epoch: 0.0196
+Validation meanIoU over epoch: 0.6847
+Reducing learning rate to 1.249999968422344e-05. No improvement in validation loss in the last 10 epochs.
+Time taken over epoch: 64.02s
+
+Start of epoch 66
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0076
+Training meanIoU over epoch: 0.7377
+Validation loss over epoch: 0.0204
+Validation meanIoU over epoch: 0.6853
+Time taken over epoch: 63.20s
+
+Start of epoch 67
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0072
+Training meanIoU over epoch: 0.7329
+Validation loss over epoch: 0.0209
+Validation meanIoU over epoch: 0.6840
+Time taken over epoch: 62.12s
+
+Start of epoch 68
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0071
+Training meanIoU over epoch: 0.7450
+Validation loss over epoch: 0.0202
+Validation meanIoU over epoch: 0.6874
+Time taken over epoch: 64.95s
+
+Start of epoch 69
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0068
+Training meanIoU over epoch: 0.7472
+Validation loss over epoch: 0.0203
+Validation meanIoU over epoch: 0.6855
+Time taken over epoch: 57.54s
+
+Start of epoch 70
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0072
+Training meanIoU over epoch: 0.7355
+Validation loss over epoch: 0.0199
+Validation meanIoU over epoch: 0.6850
+Time taken over epoch: 67.16s
+
+Start of epoch 71
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0068
+Training meanIoU over epoch: 0.7487
+Validation loss over epoch: 0.0205
+Validation meanIoU over epoch: 0.6840
+Time taken over epoch: 66.26s
+
+Start of epoch 72
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0070
+Training meanIoU over epoch: 0.7465
+Validation loss over epoch: 0.0190
+Validation meanIoU over epoch: 0.6922
+Time taken over epoch: 61.97s
+
+Start of epoch 73
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0069
+Training meanIoU over epoch: 0.7422
+Validation loss over epoch: 0.0201
+Validation meanIoU over epoch: 0.6849
+Time taken over epoch: 60.63s
+
+Start of epoch 74
+Current learning rate: 1.25e-05
+Training loss over epoch: 0.0069
+Training meanIoU over epoch: 0.7443
+Validation loss over epoch: 0.0206
+Validation meanIoU over epoch: 0.6863
+
+Early stopping. No improvement in validation loss in the last 30 epochs.
+Time taken over epoch: 61.13s
+
+Total time taken: 01:18:46

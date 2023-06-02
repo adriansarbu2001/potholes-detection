@@ -12,7 +12,7 @@ def plot_from_generator(generator):
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 10))
 
         ax1.imshow(img)
-        ax1.contour(mask.squeeze(), colors="k", linewidths=5, levels=[0.5])
+        ax1.contour(mask.squeeze(), colors="k", linewidths=2, levels=[0.5])
         ax1.set_title("RGB")
 
         ax2.imshow(mask.squeeze(), cmap="gray", interpolation="bilinear")

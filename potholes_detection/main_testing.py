@@ -11,12 +11,17 @@ from utils.read_data import read_images
 from utils.augmentation import zip_generator, opening2d, closing2d
 
 print("Reading test images...")
-x_generator, y_generator = read_images(rgb_path="data/pothole600/testing/rgb/",
-                                       label_path="data/pothole600/testing/label/")
+
+# x_generator, y_generator = read_images(rgb_path="data/pothole600/testing/rgb/",
+#                                        label_path="data/pothole600/testing/label/")
+
+x_generator, y_generator = read_images(rgb_path="data/potholes_on_road/validation/images/",
+                                       label_path="data/potholes_on_road/validation/masks/")
+
 test_generator = zip_generator(x_generator=x_generator, y_generator=y_generator)
 
 # load the best model
-model = load_model("custom_trained_model.h5", compile=False)
+model = load_model("saved_models/model.h5", compile=False)
 
 test_iou_metric = MeanIoU(num_classes=2)
 test_acc_metric = Accuracy()
@@ -25,7 +30,7 @@ test_acc_metric = Accuracy()
 @tf.function
 def test_step(x, y):
     y_pred = model(x, training=False)
-    y_pred = tf.where(y_pred >= 0.5, 1.0, 0.0)
+    y_pred = tf.where(y_pred >= 0.4, 1.0, 0.0)
 
     # morphological operations
     kernel = np.ones((5, 5, 1), np.float32)

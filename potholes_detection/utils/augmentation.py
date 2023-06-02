@@ -4,11 +4,14 @@ import tensorflow as tf
 from potholes_detection.utils.constants import IM_HEIGHT, IM_WIDTH, BATCH_SIZE
 
 
-transforms = A.Compose([
+transform_both = A.Compose([
     A.HorizontalFlip(p=0.5),
 #    A.RandomRotate90(p=0.5),
-#    A.RandomResizedCrop(height=IM_HEIGHT, width=IM_WIDTH, scale=(0.5, 1), ratio=(1, 1), p=0.5),
-    A.RandomBrightnessContrast(p=0.5),
+    A.RandomResizedCrop(height=IM_HEIGHT, width=IM_WIDTH, scale=(0.95, 1), ratio=(1, 1), p=0.5),
+])
+
+transform_image = A.Compose([
+    A.RandomBrightnessContrast(p=1),
 ])
 
 
@@ -23,7 +26,8 @@ def zip_generator(x_generator, y_generator):
 
 def zip_generator_with_augmentation(x_generator, y_generator):
     def _augment_images(image, mask):
-        transformed = transforms(image=image, mask=mask)
+        transformed = transform_both(image=image, mask=mask)
+        transformed["image"] = transform_image(image=transformed["image"])["image"]
 
         transformed_image = tf.cast(transformed["image"], tf.float32)
         transformed_mask = tf.cast(transformed["mask"], tf.uint8)

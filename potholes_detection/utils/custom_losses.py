@@ -7,7 +7,7 @@ def weighted_binary_crossentropy(weight_foreground, weight_background):
         y_true = tf.cast(y_true, tf.float32)
         y_pred = tf.cast(y_pred, tf.float32)
         b_ce = losses.BinaryCrossentropy()(y_true, y_pred)
-        weight_vector = y_true * weight_foreground + (1 - y_true) * weight_background
+        weight_vector = y_true * weight_foreground + (1. - y_true) * weight_background
         weighted_b_ce = weight_vector * b_ce
         return tf.reduce_mean(weighted_b_ce)
 
@@ -45,7 +45,7 @@ def weighted_focal_loss(weight_foreground, weight_background, gamma):
         y_true = tf.cast(y_true, tf.float32)
         y_pred = tf.cast(y_pred, tf.float32)
         b_ce = focal_loss(gamma)(y_true, y_pred)
-        weight_vector = y_true * weight_foreground + (1 - y_true) * weight_background
+        weight_vector = y_true * weight_foreground + (1. - y_true) * weight_background
         weighted_b_ce = weight_vector * b_ce
         return tf.reduce_mean(weighted_b_ce)
 

@@ -9,9 +9,10 @@ from utils.augmentation import zip_generator, zip_generator_with_augmentation
 
 plt.style.use("ggplot")
 
-x_generator, y_generator = read_images("data/training/rgb/", "data/training/label/")
+x_generator, y_generator = read_images(rgb_path="data/potholes_on_road/training/images/",
+                                                   label_path="data/potholes_on_road/training/masks/")
 
-generator = zip_generator_with_augmentation(x_generator, y_generator)
+generator = zip_generator(x_generator, y_generator)
 # generator = zip_generator(x_generator, y_generator)
 
 ratios = []
@@ -24,5 +25,5 @@ for x_batch, y_batch in generator:
 print(sum(ratios) / len(ratios))
 plt.xlabel("Pothole area / image area", fontsize=16)
 plt.ylabel("No. images", fontsize=16)
-plt.hist(ratios, bins=15)
+plt.hist(ratios, bins=30)
 plt.show()

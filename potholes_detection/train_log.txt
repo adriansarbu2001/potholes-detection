@@ -1,0 +1,20 @@
+Start of epoch 0
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.2006
+Training meanIoU over epoch: 0.0416
+Validation loss over epoch: 0.1746
+Validation meanIoU over epoch: 0.0253
+Model saved to "model.h5"
+Time taken over epoch: 68.23s
+
+Start of epoch 1
+Current learning rate: 9.9999997e-05
+Training loss over epoch: 0.0862
+Training meanIoU over epoch: 0.3206
+Validation loss over epoch: 0.0820
+Validation meanIoU over epoch: 0.3026
+Model saved to "model.h5"
+Time taken over epoch: 50.04s
+
+Start of epoch 2
+Current learning rate: 9.9999997e-05
