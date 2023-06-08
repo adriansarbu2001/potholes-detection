@@ -40,9 +40,9 @@ if not os.path.isdir("train"):
         shutil.move(f"potholes/{c}", "test/potholes")
 os.chdir("../..")
 
-train_path = 'data/roads/train'
-valid_path = 'data/roads/valid'
-test_path = 'data/roads/test'
+train_path = '../potholes_detection/data/roads/train'
+valid_path = '../potholes_detection/data/roads/valid'
+test_path = '../potholes_detection/data/roads/test'
 batch_size = 10
 
 
