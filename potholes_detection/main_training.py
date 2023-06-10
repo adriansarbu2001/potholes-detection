@@ -5,6 +5,7 @@ from keras.metrics import MeanIoU, Accuracy, Mean
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.models import load_model
 
+from potholes_detection.utils.constants import IM_HEIGHT, IM_WIDTH
 from model.model import get_unet, get_optimizer, get_loss_fn
 from utils.read_data import read_images
 from utils.augmentation import zip_generator, zip_generator_with_augmentation
@@ -34,10 +35,14 @@ def log(text):
 
 print("Reading train images...")
 x_train_generator, y_train_generator = read_images(rgb_path="data/potholes_on_road/training/images/",
-                                                   label_path="data/potholes_on_road/training/masks/")
+                                                   label_path="data/potholes_on_road/training/masks/",
+                                                   im_height=IM_HEIGHT,
+                                                   im_width=IM_WIDTH)
 print("Reading validation images...")
 x_valid_generator, y_valid_generator = read_images(rgb_path="data/potholes_on_road/validation/images/",
-                                                   label_path="data/potholes_on_road/validation/masks/")
+                                                   label_path="data/potholes_on_road/validation/masks/",
+                                                   im_height=IM_HEIGHT,
+                                                   im_width=IM_WIDTH)
 
 train_generator = zip_generator_with_augmentation(x_generator=x_train_generator, y_generator=y_train_generator)
 valid_generator = zip_generator(x_generator=x_valid_generator, y_generator=y_valid_generator)

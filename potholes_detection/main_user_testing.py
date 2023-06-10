@@ -18,8 +18,8 @@ model = load_model('saved_models/model_v3.h5', compile=False)
 
 # model.summary()
 
-img = load_img("test_images/test6.png", color_mode="rgb")
-label = load_img("test_images/test6_real_label.png", color_mode="grayscale")
+img = load_img("test_images/test8.png", color_mode="rgb")
+label = load_img("test_images/test8_real_label.png", color_mode="grayscale")
 x_img = img_to_array(img)
 x_img = resize(x_img, (IM_HEIGHT, IM_WIDTH, 3), mode="constant", preserve_range=True)
 x_img = x_img / 255.0
