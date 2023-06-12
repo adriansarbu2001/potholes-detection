@@ -11,7 +11,7 @@ transform_both = A.Compose([
 ])
 
 transform_image = A.Compose([
-    A.RandomBrightnessContrast(p=1),
+    A.RandomBrightnessContrast(p=0.5),
 ])
 
 
